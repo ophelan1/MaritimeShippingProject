@@ -10,7 +10,7 @@
          
         path { 
           stroke: steelblue;
-          stroke-width: 2;
+          stroke-width: 3;
           fill: none;
         }
          
@@ -22,20 +22,38 @@
             shape-rendering: crispEdges;
         }
  
-    </style>      
+    c</style>      
     </head> 
 
     <body>
+        <p id="rt1str">Route 1: Shanghai to Rotterdam</p>
+        <p id="rt2str">Route 2: Shanghai to New York</p>      
+        <p id="rt3str">Route 3: Shanghai to Brisbane</p>
+        <p id="rt4str">Route 4: Singapore to Los Angeles</p>
+        <p id="rt5str">Route 5: Singapore to Balboa</p>
+
         <script>
 
         var margin = {top: 30, right: 20, bottom: 40, left: 80},
         width = 1000 - margin.left - margin.right,
         height = 440 - margin.top - margin.bottom;
 
-        var route1 = [{"ships_per_yr":"21256","year":2006},{"ships_per_yr":"11285","year":2009},{"ships_per_yr":"15530","year":2012}]
+
+        var route1 = [{"route_ID":1,"year":2006,"start_port":"Shanghai","start_port_country":"China","end_port":"Rotterdam ","end_port_country":"Netherlands","ships_per_yr":21256},{"route_ID":1,"year":2009,"start_port":"Shanghai","start_port_country":"China","end_port":"Rotterdam ","end_port_country":"Netherlands","ships_per_yr":11285},{"route_ID":1,"year":2012,"start_port":"Shanghai","start_port_country":"China","end_port":"Rotterdam ","end_port_country":"Netherlands","ships_per_yr":15530}];
+        var rt1set = 0;
+        var route2 = [{"route_ID":2,"year":2006,"start_port":"Shanghai","start_port_country":"China","end_port":"New York\/Newark","end_port_country":"United States","ships_per_yr":17602},{"route_ID":2,"year":2009,"start_port":"Shanghai","start_port_country":"China","end_port":"New York\/Newark","end_port_country":"United States","ships_per_yr":10543},{"route_ID":2,"year":2012,"start_port":"Shanghai","start_port_country":"China","end_port":"New York\/Newark","end_port_country":"United States","ships_per_yr":15072}];
+        var rt2set = 0;
+        var route3 = [{"route_ID":3,"year":2006,"start_port":"Shanghai","start_port_country":"China","end_port":"Brisbane","end_port_country":"Australia","ships_per_yr":29912},{"route_ID":3,"year":2009,"start_port":"Shanghai","start_port_country":"China","end_port":"Brisbane","end_port_country":"Australia","ships_per_yr":10392},{"route_ID":3,"year":2012,"start_port":"Shanghai","start_port_country":"China","end_port":"Brisbane","end_port_country":"Australia","ships_per_yr":11748}];
+        var route4 = [{"route_ID":4,"year":2006,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Los Angeles","end_port_country":"United States","ships_per_yr":14241},{"route_ID":4,"year":2009,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Los Angeles","end_port_country":"United States","ships_per_yr":27192},{"route_ID":4,"year":2012,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Los Angeles","end_port_country":"United States","ships_per_yr":18974}]
+        var route5 = [{"route_ID":5,"year":2006,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Balboa","end_port_country":"Panama","ships_per_yr":11739},{"route_ID":5,"year":2009,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Balboa","end_port_country":"Panama","ships_per_yr":10085},{"route_ID":5,"year":2012,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Balboa","end_port_country":"Panama","ships_per_yr":18484}];
+
+
 
         var x = d3.time.scale().range([0, width]);
         var y = d3.scale.linear().range([height, 0]);
+        var color = d3.scale.category10()
+                                .domain([0,30])
+                                .range([0,20,40,60,80,100,120,140,160,180,200])
 
         var xAxis = d3.svg.axis().scale(x)
             .orient("bottom").ticks(5);
@@ -58,11 +76,8 @@
         // Scale the range of the data
         x.domain(d3.extent(route1, function(d) { return d.year; }));
         y.domain([0, d3.max(route1, function(d) { return d.ships_per_yr; })]);
-     
-        // Add the valueline path.
-        svg.append("path")  
-            .attr("class", "line")
-            .attr("d", valueline(route1));
+
+            
      
         // Add the X Axis
         svg.append("g")     
@@ -76,7 +91,37 @@
             .call(yAxis);
 
 
+        //On click, update route 1 with new data            
+        d3.select('#rt1str')
+            .on("click", function() {  
+                if(rt1set == 0) {         
+                    rt1 = svg.append("path")  
+                        .attr("class", "line")
+                        .attr("d", valueline(route1));
+                    rt1set = 1;
+                }
+                else {
+                    rt1.remove();
+                    rt1set = 0;
+                }
 
+            });
+
+        //On click, update route 2 with new data            
+        d3.select('#rt2str')
+            .on("click", function() {  
+                if(rt2set == 0) {         
+                    rt2= svg.append("path")  
+                        .attr("class", "line")
+                        .attr("d", valueline(route2));
+                    rt2set = 1;
+                }
+                else {
+                    rt2.remove();
+                    rt2set = 0;
+                }
+
+            });
 
         </script>
     

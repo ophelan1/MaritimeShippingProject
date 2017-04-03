@@ -9,7 +9,7 @@
     $connection = mysql_select_db($database, $server);
 
     $myquery = "
-SELECT `route_ID`,`start_port`,`end_port` FROM  `rawData` 
+SELECT * FROM  `rawData` where route_ID=5
 ";
     $query = mysql_query($myquery);
     
