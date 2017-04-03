@@ -2,12 +2,32 @@
 <head>
   <title>A D3 map</title>
   <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <link href="styles.css" rel="stylesheet" />
   <script src="worldgeo.js"></script>
   <script src="ports.js"></script>
   <script src="map.js"></script>
   <script src="routes.js"></script>
+  <script src="BarChart.js"></script>
 </head>
 <body onload="ExecuteMap()"">
-<h1 id=title>World map</h1>
+  <h1 id=title>Maritime Shipping and the Great Recession</h1>
+  <div id=slider></div>
+  <div class=filter-wrapper>
+    <div style="float: left; width: 25%" class=filter id=age_filter></div>
+    <div style="float: left; width: 25%" class=filter id=size_filter></div>
+    <div style="float: left; width: 25%" class=filter id=bulk_cont>
+        <form action="">
+          <input type="checkbox" name="vehicle" value="Bulk" checked="checked"><span class="checkboxtext"> Bulk</span><br>
+          <input type="checkbox" name="vehicle" value="Cont" checked="checked"><span class="checkboxtext"> Container</span>
+        </form>
+    </div>
+    <div style="float: left; width: 25%" class=filter id=develop>
+        <form action="">
+          <input type="checkbox" name="vehicle" value="Dev" checked="checked"><span class="checkboxtext"> Developed</span><br>
+          <input type="checkbox" name="vehicle" value="Undev" checked="checked"><span class="checkboxtext"> Undeveloped</span>
+        </form>
+    </div>
+  </div>
+
 </body>
 </html>
