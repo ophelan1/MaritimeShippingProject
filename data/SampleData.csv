@@ -1,4 +1,4 @@
-Route ID,Year,Start Port,Start Port Country,End Port,End Port Country,ships/yr.
+route_ID,year,start_port,start_port_country,end_port,end_port_country,ships_per_yr
 1,2006,Shanghai,China,Rotterdam ,Netherlands,21256
 2,2006,Shanghai,China,New York/Newark,United States,17602
 3,2006,Shanghai,China,Brisbane,Australia,29912

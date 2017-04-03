@@ -1,73 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>D3: Demo of linear easing</title>
-		<script type="text/javascript" src="d3/d3.js"></script>
-		<style type="text/css">
-			/* No style rules here yet */		
-		</style>
-	</head>
-	<body>
-	
-		<p>Click on this text to update the chart with new data values (once).</p>
-			
-		<script type="text/javascript">
-var svg = d3.select("svg"),
-    margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom,
-    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>Line Chart</title>
+        <script type="text/javascript" src="d3/d3.js"></script> 
+        <style> /* set the CSS */
+         
+        body { font: 12px Arial;}
+         
+        path { 
+          stroke: steelblue;
+          stroke-width: 2;
+          fill: none;
+        }
+         
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: grey;
+            stroke-width: 1;
+            shape-rendering: crispEdges;
+        }
+ 
+    </style>      
+    </head> 
 
-var parseTime = d3.timeParse("%d-%b-%y");
+    <body>
+        <script>
 
-var x = d3.scaleTime()
-    .rangeRound([0, width]);
+        var margin = {top: 30, right: 20, bottom: 40, left: 80},
+        width = 1000 - margin.left - margin.right,
+        height = 440 - margin.top - margin.bottom;
 
-var y = d3.scaleLinear()
-    .rangeRound([height, 0]);
+        var route1 = [{"ships_per_yr":"21256","year":2006},{"ships_per_yr":"11285","year":2009},{"ships_per_yr":"15530","year":2012}]
 
-var line = d3.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.close); });
+        var x = d3.time.scale().range([0, width]);
+        var y = d3.scale.linear().range([height, 0]);
 
-d3.csv("SampleData.csv", function(d) {
-  d.date = parseTime(d.date);
-  d.close = +d.close;
-  return d;
-}, function(error, data) {
-  if (error) throw error;
+        var xAxis = d3.svg.axis().scale(x)
+            .orient("bottom").ticks(5);
 
-  x.domain(d3.extent(data, function(d) { return d.date; }));
-  y.domain(d3.extent(data, function(d) { return d.close; }));
+        var yAxis = d3.svg.axis().scale(y)
+            .orient("left").ticks(5);
 
-  g.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x))
-    .select(".domain")
-      .remove();
+        var valueline = d3.svg.line()
+            .x(function(d) { return x(d.year); })
+            .y(function(d) { return y(d.ships_per_yr); });
 
-  g.append("g")
-      .call(d3.axisLeft(y))
-    .append("text")
-      .attr("fill", "#000")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", "0.71em")
-      .attr("text-anchor", "end")
-      .text("Price ($)");
 
-  g.append("path")
-      .datum(data)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-linecap", "round")
-      .attr("stroke-width", 1.5)
-      .attr("d", line);
-});
+        var svg = d3.select("body")
+            .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-			
-		</script>
-	</body>
+        // Scale the range of the data
+        x.domain(d3.extent(route1, function(d) { return d.year; }));
+        y.domain([0, d3.max(route1, function(d) { return d.ships_per_yr; })]);
+     
+        // Add the valueline path.
+        svg.append("path")  
+            .attr("class", "line")
+            .attr("d", valueline(route1));
+     
+        // Add the X Axis
+        svg.append("g")     
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+     
+        // Add the Y Axis
+        svg.append("g")     
+            .attr("class", "y axis")
+            .call(yAxis);
+
+
+
+
+        </script>
+    
+    </body>
 </html>
+ 
