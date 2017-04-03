@@ -1,4 +1,4 @@
-VESSEL ID,VESSEL_NAME,VESSEL_TYPE,PLACE_NAME,COUNTRY_NAME,AREA_NAME,ARRIVAL_DATE,DEPARTURE_DATE
+VESSEL_ID,VESSEL_NAME,VESSEL_TYPE,PLACE_NAME,COUNTRY_NAME,AREA_NAME,ARRIVAL_DATE,DEPARTURE_DATE
 121462,Berezovneft,product tanker,Vanino,Russian Federation,"China, Korea and Russia",1/4/11,1/6/11
 121462,Berezovneft,product tanker,Plastun,Russian Federation,"China, Korea and Russia",1/6/11,2/1/11
 121462,Berezovneft,product tanker,Vanino,Russian Federation,"China, Korea and Russia",2/1/11,2/8/11
