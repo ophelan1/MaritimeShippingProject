@@ -31,6 +31,7 @@
         <p id="rt3str">Route 3: Shanghai to Brisbane</p>
         <p id="rt4str">Route 4: Singapore to Los Angeles</p>
         <p id="rt5str">Route 5: Singapore to Balboa</p>
+        <hr>
 
         <script>
 
@@ -40,26 +41,30 @@
 
 
         var route1 = [{"route_ID":1,"year":2006,"start_port":"Shanghai","start_port_country":"China","end_port":"Rotterdam ","end_port_country":"Netherlands","ships_per_yr":21256},{"route_ID":1,"year":2009,"start_port":"Shanghai","start_port_country":"China","end_port":"Rotterdam ","end_port_country":"Netherlands","ships_per_yr":11285},{"route_ID":1,"year":2012,"start_port":"Shanghai","start_port_country":"China","end_port":"Rotterdam ","end_port_country":"Netherlands","ships_per_yr":15530}];
-        var rt1set = 0;
         var route2 = [{"route_ID":2,"year":2006,"start_port":"Shanghai","start_port_country":"China","end_port":"New York\/Newark","end_port_country":"United States","ships_per_yr":17602},{"route_ID":2,"year":2009,"start_port":"Shanghai","start_port_country":"China","end_port":"New York\/Newark","end_port_country":"United States","ships_per_yr":10543},{"route_ID":2,"year":2012,"start_port":"Shanghai","start_port_country":"China","end_port":"New York\/Newark","end_port_country":"United States","ships_per_yr":15072}];
-        var rt2set = 0;
-        var route3 = [{"route_ID":3,"year":2006,"start_port":"Shanghai","start_port_country":"China","end_port":"Brisbane","end_port_country":"Australia","ships_per_yr":29912},{"route_ID":3,"year":2009,"start_port":"Shanghai","start_port_country":"China","end_port":"Brisbane","end_port_country":"Australia","ships_per_yr":10392},{"route_ID":3,"year":2012,"start_port":"Shanghai","start_port_country":"China","end_port":"Brisbane","end_port_country":"Australia","ships_per_yr":11748}];
+        var route3 = [{"route_ID":3,"year":2006,"start_port":"Shanghai","start_port_country":"China","end_port":"Brisbane","end_port_country":"Australia","ships_per_yr":10000},{"route_ID":3,"year":2009,"start_port":"Shanghai","start_port_country":"China","end_port":"Brisbane","end_port_country":"Australia","ships_per_yr":18392},{"route_ID":3,"year":2012,"start_port":"Shanghai","start_port_country":"China","end_port":"Brisbane","end_port_country":"Australia","ships_per_yr":11748}];
         var route4 = [{"route_ID":4,"year":2006,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Los Angeles","end_port_country":"United States","ships_per_yr":14241},{"route_ID":4,"year":2009,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Los Angeles","end_port_country":"United States","ships_per_yr":27192},{"route_ID":4,"year":2012,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Los Angeles","end_port_country":"United States","ships_per_yr":18974}]
         var route5 = [{"route_ID":5,"year":2006,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Balboa","end_port_country":"Panama","ships_per_yr":11739},{"route_ID":5,"year":2009,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Balboa","end_port_country":"Panama","ships_per_yr":10085},{"route_ID":5,"year":2012,"start_port":"Singapore","start_port_country":"Malaysia","end_port":"Balboa","end_port_country":"Panama","ships_per_yr":18484}];
 
+        var rt1set = 0;
+        var rt2set = 0;
+        var rt3set = 0;
+        var rt4set = 0;
+        var rt5set = 0;
 
-
-        var x = d3.time.scale().range([0, width]);
+        // The X & Y Scale
+        var x = d3.scale.linear()
+            .range([0, width])
         var y = d3.scale.linear().range([height, 0]);
-        var color = d3.scale.category10()
-                                .domain([0,30])
-                                .range([0,20,40,60,80,100,120,140,160,180,200])
+        var cScale = d3.scale.category20();
 
+        // THE X & Y Axis
         var xAxis = d3.svg.axis().scale(x)
-            .orient("bottom").ticks(5);
-
+            .orient("bottom")
+            .tickValues(['2006', '2009', '2012'])
         var yAxis = d3.svg.axis().scale(y)
             .orient("left").ticks(5);
+
 
         var valueline = d3.svg.line()
             .x(function(d) { return x(d.year); })
@@ -74,7 +79,7 @@
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         // Scale the range of the data
-        x.domain(d3.extent(route1, function(d) { return d.year; }));
+        x.domain([2005, 2013]);
         y.domain([0, d3.max(route1, function(d) { return d.ships_per_yr; })]);
 
             
@@ -110,8 +115,8 @@
         //On click, update route 2 with new data            
         d3.select('#rt2str')
             .on("click", function() {  
-                if(rt2set == 0) {         
-                    rt2= svg.append("path")  
+                if(rt2set == 0) {    
+                    rt2 = svg.append("path")  
                         .attr("class", "line")
                         .attr("d", valueline(route2));
                     rt2set = 1;
@@ -123,6 +128,53 @@
 
             });
 
+        //On click, update route 3 with new data            
+        d3.select('#rt3str')
+            .on("click", function() {  
+                if(rt3set == 0) {    
+                    rt3 = svg.append("path")  
+                        .attr("class", "line")
+                        .attr("d", valueline(route3));
+                    rt3set = 1;
+                }
+                else {
+                    rt3.remove();
+                    rt3set = 0;
+                }
+
+            });
+
+        //On click, update route 4 with new data            
+        d3.select('#rt4str')
+            .on("click", function() {  
+                if(rt4set == 0) {    
+                    rt4 = svg.append("path")  
+                        .attr("class", "line")
+                        .attr("d", valueline(route4));
+                    rt4set = 1;
+                }
+                else {
+                    rt4.remove();
+                    rt4set = 0;
+                }
+
+            });
+
+        //On click, update route 5 with new data            
+        d3.select('#rt5str')
+            .on("click", function() {  
+                if(rt5set == 0) {    
+                    rt5 = svg.append("path")  
+                        .attr("class", "line")
+                        .attr("d", valueline(route5));
+                    rt5set = 1;
+                }
+                else {
+                    rt5.remove();
+                    rt5set = 0;
+                }
+
+            });
         </script>
     
     </body>
