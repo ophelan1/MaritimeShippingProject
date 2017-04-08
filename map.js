@@ -102,10 +102,11 @@ function ExecuteMap() {
       .enter()
       .append("path")
       .filter(function(d) {
+        return d.startportID < 1000 & d.endportID < 1000;
         // console.log(routeFreq[i]);
         // return routeFreq[i]>2;
         // return d.startportID == 1182 | d.startportID == 238;
-        return d.startportID < 1000; //& d.endportID < 500;
+        // return d.startportID < 1000 & d.endportID < 500;
       })
       .attr("d", function(d) {
         var startport = ports_d.filter(function(d2){
