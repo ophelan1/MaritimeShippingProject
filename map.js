@@ -5,12 +5,30 @@ function ExecuteMap() {
 
 //######################################################################
 // Setup the map SVG
-  var mapSvg = d3.select("#mapContainer")
+  // USING GLOBAL VARIABLES FOR BOTH SVGs
+  mapSvg = d3.select("#mapContainer")
     .append("svg")
     .attr("width", width)
     .attr("height", height);
 
   var g = mapSvg.append("g");
+
+  // Global proj variable
+  proj = d3.geo.equirectangular()
+    .scale(300)
+    // .rotate( [71.057,0] )
+    //.center( [0, 42.313] )
+    .translate([width/2,height/2]);
+
+  geoPath = d3.geo.path()
+      .projection(proj);
+
+  g.selectAll("path")
+    .data(worldgeo_json.features)
+    .enter()
+    .append("path")
+    .attr("fill", "#b7b7b7")
+    .attr("d", geoPath);
 
 //######################################################################
 // Setup the Bar Chart SVG
@@ -34,8 +52,8 @@ function ExecuteMap() {
       .x(function(d) { return x(d.year); })
       .y(function(d) { return y(d.ships_per_yr); });
 
-
-  var barSvg = d3.select("#chartContainer")
+  //Global SVG Variable
+  barSvg = d3.select("#chartContainer")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -45,8 +63,6 @@ function ExecuteMap() {
   // Scale the range of the data
   x.domain([2005, 2013]);
   y.domain([0, 1000]);
-
-      
 
   // Add the X Axis
   barSvg.append("g")     
@@ -62,22 +78,7 @@ function ExecuteMap() {
 
 
 //######################################################################
-  var proj = d3.geo.equirectangular()
-    .scale(300)
-    // .rotate( [71.057,0] )
-    //.center( [0, 42.313] )
-    .translate([width/2,height/2]);
-
-  var geoPath = d3.geo.path()
-      .projection(proj);
-
-  g.selectAll("path")
-    .data(worldgeo_json.features)
-    .enter()
-    .append("path")
-    .attr("fill", "#b7b7b7")
-    .attr("d", geoPath);
-
+// Setup the Filter Section
   
   // var slider = d3.select("#slider").call(d3.slider().axis(true).min(2006).max(2012).step(3));
 
@@ -102,7 +103,20 @@ function ExecuteMap() {
   d3.select("#age_filter").call(BarChart().width(400).height(150).labelPadding(1).data(data));
   d3.select("#size_filter").call(BarChart().width(400).height(150).labelPadding(1).data(size));
 
-  d3.queue()
+
+
+    // var width_scale = d3.scale.linear()
+    //   .range([0,5]);
+
+    // width_scale.domain([
+    //   d3.min(routes_json.features, function(d) { return d.properties.frequency; }),
+    //   d3.max(routes_json.features, function(d) { return d.properties.frequency; })
+    // ]);
+  };
+
+
+  function setRoutes() {
+    d3.queue()
     .defer(d3.csv, "http://localhost/~Owen/MaritimeShippingProject/Ports.csv", function(d) {
       return {
         id: d.id,
@@ -139,6 +153,7 @@ function ExecuteMap() {
       };
     })
     .await(ready);
+  }
 
   function ready(error, ports_d, routes_d, vessels_d, traversals_d) {
     if (error) throw error;
@@ -208,15 +223,6 @@ function ExecuteMap() {
           .attr("fill", "#342a99")
           .attr("stroke", "#342a99");
       });
-
-    // var width_scale = d3.scale.linear()
-    //   .range([0,5]);
-
-    // width_scale.domain([
-    //   d3.min(routes_json.features, function(d) { return d.properties.frequency; }),
-    //   d3.max(routes_json.features, function(d) { return d.properties.frequency; })
-    // ]);
-  };
 
   function buildRoute(coords) {
     // var west = false;

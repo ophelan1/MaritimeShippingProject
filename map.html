@@ -15,18 +15,21 @@
   <h1 id="title">Maritime Shipping and the Great Recession</h1>
   <div id="mapContainer"></div>
   <div class=filter-wrapper>
-    <div style="float: left; width: 25%" class=filter id="age_filter"></div>
-    <div style="float: left; width: 25%" class=filter id="size_filter"></div>
-    <div style="float: left; width: 25%" class=filter id="bulk_cont">
+    <div style="float: left; width: 20%" class=filter id="age_filter"></div>
+    <div style="float: left; width: 20%" class=filter id="size_filter"></div>
+    <div style="float: left; width: 20%" class=filter id="bulk_cont">
       <input type="checkbox" name="vehicle" value="Bulk" checked="checked"><span class="checkboxtext"> Bulk</span><br>
       <input type="checkbox" name="vehicle" value="Cont" checked="checked"><span class="checkboxtext"> Container</span>
     </div>
-    <div style="float: left; width: 25%" class=filter id="develop">
+    <div style="float: left; width: 20%" class=filter id="develop">
       <input type="checkbox" name="vehicle" value="Dev" checked="checked"><span class="checkboxtext"> Developed</span><br>
       <input type="checkbox" name="vehicle" value="Undev" checked="checked"><span class="checkboxtext"> Undeveloped</span>
     </div>
+    <div style="float: left; width: 20%" class="map_button"></div>
   </div>
-  <div id="chartContainer"></div>
+  <div id="chartContainer">
+    <button onclick="setRoutes()">Generate Routes</button>
+  </div>
 
 </body>
 </html>
