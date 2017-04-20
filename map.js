@@ -2,13 +2,66 @@ function ExecuteMap() {
   var width = 2150,
     height = 1000;
 
-  var svg = d3.select("#MapContainer")
+
+//######################################################################
+// Setup the map SVG
+  var mapSvg = d3.select("#mapContainer")
     .append("svg")
     .attr("width", width)
     .attr("height", height);
 
-  var g = svg.append("g");
+  var g = mapSvg.append("g");
 
+//######################################################################
+// Setup the Bar Chart SVG
+  var margin = {top: 30, right: 20, bottom: 40, left: 80};
+
+ // The X & Y Scale
+  var x = d3.scale.linear()
+      .range([0, width])
+  var y = d3.scale.linear().range([height, 0]);
+  var cScale = d3.scale.category20();
+
+  // THE X & Y Axis
+  var xAxis = d3.svg.axis().scale(x)
+      .orient("bottom")
+      .tickValues(['2006', '2009', '2012'])
+  var yAxis = d3.svg.axis().scale(y)
+      .orient("left").ticks(5);
+
+
+  var valueline = d3.svg.line()
+      .x(function(d) { return x(d.year); })
+      .y(function(d) { return y(d.ships_per_yr); });
+
+
+  var barSvg = d3.select("#chartContainer")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  // Scale the range of the data
+  x.domain([2005, 2013]);
+  y.domain([0, 1000]);
+
+      
+
+  // Add the X Axis
+  barSvg.append("g")     
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  // Add the Y Axis
+  barSvg.append("g")     
+      .attr("class", "y axis")
+      .call(yAxis);
+
+
+
+//######################################################################
   var proj = d3.geo.equirectangular()
     .scale(300)
     // .rotate( [71.057,0] )
@@ -95,7 +148,7 @@ function ExecuteMap() {
     // console.log(routeFreq[0]);
     // console.log(routeFreq[1]);
 
-    var routes = svg.append("g");
+    var routes = mapSvg.append("g");
 
     routes.selectAll("path")
       .data(routes_d)
@@ -132,7 +185,7 @@ function ExecuteMap() {
           .attr("stroke","#66cd00");
       });
 
-    var ports = svg.append("g");
+    var ports = mapSvg.append("g");
 
     ports.selectAll("path")
       .data(ports_d)
