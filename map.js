@@ -2,7 +2,7 @@ function ExecuteMap() {
   var width = 2150,
     height = 1000;
 
-  var svg = d3.select("body")
+  var svg = d3.select("#MapContainer")
     .append("svg")
     .attr("width", width)
     .attr("height", height);
@@ -50,7 +50,7 @@ function ExecuteMap() {
   d3.select("#size_filter").call(BarChart().width(400).height(150).labelPadding(1).data(size));
 
   d3.queue()
-    .defer(d3.csv, "http://localhost/NewUpdate2/mapviz/Ports.csv", function(d) {
+    .defer(d3.csv, "http://localhost/~Owen/MaritimeShippingProject/Ports.csv", function(d) {
       return {
         id: d.id,
         name: d.name,
