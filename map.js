@@ -48,7 +48,7 @@ function ExecuteMap() {
       .orient("left").ticks(5);
 
 
-  var valueline = d3.svg.line()
+  valueline = d3.svg.line()
       .x(function(d) { return x(d.year); })
       .y(function(d) { return y(d.ships_per_yr); });
 
@@ -195,9 +195,32 @@ function ExecuteMap() {
         // return width_scale(d);
       // })
       .on("click", function() {
-        d3.select(this)
-          .attr("fill","#66cd00")
-          .attr("stroke","#66cd00");
+        if(d3.select(this).attr("fill") == "#000000" ){
+          d3.select(this)
+            .attr("fill","#66cd00")
+            .attr("stroke","#66cd00");
+
+
+
+          /*On click, update route 1 with new data            
+          d3.select('#rt1str')  
+                  if(rt1set == 0) {         
+                      rt1 = svg.append("path")  
+                          .attr("class", "line")
+                          .attr("d", valueline(route1));
+                      rt1set = 1;
+                  }
+                  else {
+                      rt1.remove();
+                      rt1set = 0;
+                  }*/
+        }
+        else{
+          console.log("Path already highlighted");
+          d3.select(this)
+            .attr("fill","#000000")
+            .attr("stroke", "#000000");
+        }
       });
 
     var ports = mapSvg.append("g");
