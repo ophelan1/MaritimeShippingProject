@@ -50,7 +50,7 @@ function ExecuteMap() {
 
   valueline = d3.svg.line()
       .x(function(d) { return x(d.year); })
-      .y(function(d) { return y(d.ships_per_yr); });
+      .y(function(d) { return y(d.frequency); });
 
   //Global SVG Variable
   barSvg = d3.select("#chartContainer")
@@ -74,6 +74,8 @@ function ExecuteMap() {
   barSvg.append("g")     
       .attr("class", "y axis")
       .call(yAxis);
+
+  lineArray = {};
 
 
 
@@ -200,6 +202,27 @@ function ExecuteMap() {
             .attr("fill","#66cd00")
             .attr("stroke","#66cd00");
 
+        $.ajax({
+          url: 'php/tableSetup.php',
+          type: 'POST',
+          success: function(data) {
+            $.ajax({
+              url: 'php/getValues.php',
+              type: 'POST',
+              success: function(data) {
+                console.log(data);
+                var routeData = JSON.parse(data);
+                console.log(routeData);
+                routeLine = barSvg.append("path")
+                      .attr("class", "line")
+                      .attr("d", valueline(routeData));
+              }
+            }); // end inner ajax cal
+          }
+        }); // end outer ajax cal
+
+          
+
 
 
           /*On click, update route 1 with new data            
@@ -217,6 +240,7 @@ function ExecuteMap() {
         }
         else{
           console.log("Path already highlighted");
+          routeLine.remove();
           d3.select(this)
             .attr("fill","#000000")
             .attr("stroke", "#000000");
@@ -266,7 +290,7 @@ function ExecuteMap() {
       horz1 = x180 - proj(coords[0])[0];
       horz2 = proj(coords[1])[0] - xm180;
       slope = vert/(horz1 + horz2);
-      console.log(coords[0]); //**
+      //console.log(coords[0]); //**
       path+= "L" + x180 + ","; path+= (proj(coords[0])[1] + slope * horz1);
       path+= "M" + xm180 + ","; path+= (proj(coords[0])[1] + slope * horz1);
     } 
@@ -275,7 +299,7 @@ function ExecuteMap() {
       horz1 = proj(coords[0])[0] - xm180;
       horz2 = x180 - proj(coords[1])[0];
       slope = vert/(horz1 + horz2);
-      console.log(coords[0]); //**
+      //console.log(coords[0]); //**
       path+= "L" + xm180 + ","; path+= (proj(coords[0])[1] + slope * horz1);
       path+= "M" + x180 + ","; path+= (proj(coords[0])[1] + slope * horz1);
     }
