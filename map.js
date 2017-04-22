@@ -201,11 +201,19 @@ function ExecuteMap() {
           d3.select(this)
             .attr("fill","#66cd00")
             .attr("stroke","#66cd00");
+            var idInfo = d3.select(this).datum();
+            var startPortID = idInfo.startportID;
+            var endPortID = idInfo.endportID;
+            console.log(idInfo);
+            console.log(startPortID);
+            console.log(endPortID);
 
         $.ajax({
           url: 'php/tableSetup.php',
           type: 'POST',
+          data: {routeID1:startPortID, routeID2:endPortID},
           success: function(data) {
+            console.log(data);
             $.ajax({
               url: 'php/getValues.php',
               type: 'POST',
@@ -221,22 +229,6 @@ function ExecuteMap() {
           }
         }); // end outer ajax cal
 
-          
-
-
-
-          /*On click, update route 1 with new data            
-          d3.select('#rt1str')  
-                  if(rt1set == 0) {         
-                      rt1 = svg.append("path")  
-                          .attr("class", "line")
-                          .attr("d", valueline(route1));
-                      rt1set = 1;
-                  }
-                  else {
-                      rt1.remove();
-                      rt1set = 0;
-                  }*/
         }
         else{
           console.log("Path already highlighted");
