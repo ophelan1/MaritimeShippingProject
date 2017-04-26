@@ -46,6 +46,12 @@ input[type=checkbox] {
 	text-align: center;
 }
 
+path.route.selected {
+    fill: #66cd00;
+    stroke: #66cd00;
+    opacity: 0.8;
+}
+
 div.chart {
 	text-align: center;
 }
@@ -73,12 +79,8 @@ div.chart {
 .axis path,
 .axis line {
   	fill: none;
-  	stroke: #000;
+  	stroke: black;
   	shape-rendering: crispEdges;
-}
-
-.x.axis path {
-  	display: none;
 }
 
 .axis text {
@@ -166,4 +168,10 @@ div.chart {
     left: -.25em;
     margin-left: 0;
     margin-bottom: -.6em;      
+}
+
+path.line {
+    fill: none;
+    stroke: black;
+    stroke-width: 4px;
 }

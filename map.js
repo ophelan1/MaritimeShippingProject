@@ -80,27 +80,26 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
     d3.select("#chartContainer").call(linechart);
 
     function drawRoutes() {
-
         var routes = mapSvg.append("g");
 
         var route_data = allFilters(ports_d, routes_d, vessels_d, traversals_d);
 
+        var opac = d3.scale.linear()
+            .range([0,1])
+            .domain([0, d3.max(route_data, function(d) { 
+                return d.freq;
+            })]);   
+
         routes.selectAll("path")
             .data(route_data)
-            // .filter(function(d) {
-            //     console.log(route_data)
-            //     console.log(route_data.routeID);
-            //     console.log(d.routeID);
-            //     console.log(route_data.routeID.indexOf(d.routeID));
-            //     console.log(route_data.routeID.indexOf(d.routeID) === -1);
-            //     // return route_data.routeID.indexOf(d.routeID) === -1;
-            //     return true;
-            // })
             .enter()
             .append("path")
-            .attr("class", "route unselected")
+            .attr("class", "route")
             .attr("id", function(d) {
-                return d.routeID;
+                return "r" + d.routeID;
+            })
+            .attr("opacity", function() {
+                return opac(d3.select(this).data()[0].freq);
             })
             .attr("d", function(d) {
                 var startport = ports_d.filter(function(d2){
@@ -121,9 +120,26 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
             // return width_scale(d);
             // })
             .on("click", function() {
-                d3.select(this)
-                .attr("fill","#66cd00")
-                .attr("stroke","#66cd00");
+                var route = d3.select(this);
+                var rClass = route.attr("class");
+                if (rClass.search("selected") === -1) {
+                    route.attr("class","route selected");
+                } else {
+                    route.attr("class","route");
+                }
+
+                var chart_data = [];
+                var selected = d3.selectAll(".route.selected");
+                selected.each( function() {
+                    var dat = d3.select(this).data()[0];
+                    chart_data.push([
+                        { year: "2006", value: dat.freq2006 },
+                        { year: "2009", value: dat.freq2009 },
+                        { year: "2012", value: dat.freq2012 }
+                    ]);
+                });
+
+                linechart.data(chart_data);
             }); 
 
         var ports = mapSvg.append("g");
@@ -198,7 +214,6 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
         // filter all this data
         // produce array of route ids, port ids and frequencies
         
-        // filter vessels
         vessels_d = age_filter.filter(vessels_d, d3.select("#type_filter"));
 
         var vessels = vessels_d.map(function(d) { return d.id; });
@@ -207,31 +222,10 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
             return !(routes.indexOf(d.vesselID) === -1) && !(vessels.indexOf(d.vesselID) === -1);
         });
 
-        // calculate frequencies by route
-        // TODO
         return getFrequencies(routes_d, traversals_d);
-
-
-        // var routes = [
-        //     { routeID: "1", startportID: "3", endportID: "2567", frequency: "334" },
-        //     { routeID: "2", startportID: "7", endportID: "289", frequency: "123" },
-        //     { routeID: "3", startportID: "7", endportID: "1602", frequency: "2199" } 
-        // ];
-
-        // return routes;
     }
 
     function getFrequencies(routes_d, traversals_d) {
-        // var trav2006 = traversals_d.filter(function(d) {
-        //     return d.year === 2006;
-        // });
-        // var trav2009 = traversals_d.filter(function(d) {
-        //     return d.year === 2009;
-        // });
-        // var trav2012 = traversals_d.filter(function(d) {
-        //     return d.year === 2012;
-        // });
-
         var routeIDs = []; 
         var route_data = [];
 
@@ -248,14 +242,15 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
                     endportID: ti.endportID,
                     freq2006: 0,
                     freq2009: 0,
-                    freq2012: 0
+                    freq2012: 0,
+                    freq: 0
                 });
             };
 
             index = routeIDs.indexOf(ti.routeID);
             switch(ti.year) {
                 case "2006":
-                    route_data[index].freq2006 = route_data[index].freq2006 + 1;
+                    route_data[index].freq2006++;
                     break;
                 case "2009":
                     route_data[index].freq2009++;
@@ -264,10 +259,9 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
                     route_data[index].freq2012++;
                     break;
             }
-
+            route_data[index].freq++;
         }
 
-        console.log(route_data);
         return route_data;
     }
 

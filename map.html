@@ -10,19 +10,17 @@
 	<!-- <script src="ports.js"></script> -->
 	<script src="CheckBoxFilter.js"></script>
 	<script src="map.js"></script>
-	<!-- <script src="routes.js"></script> -->
-	<script src="BarChart.js"></script>
 	<script src="LineChart.js"></script>
 </head>
 <body onload="ExecuteViz()">
 	<h1 id="title">Maritime Shipping and the Great Recession</h1>
 	<div id="mapContainer"></div>
-	<div id="filterContainer">
+	<div id="filterContainer" style="overflow: auto;">
 		<g>
 			<div style="float: left; width: 20%" class=filter id="age_filter"></div>
 			<div style="float: left; width: 20%" class=filter id="size_filter"></div>
 			<div style="float: left; width: 20%" class=filter id="type_filter"></div>
-			<div style="float: left; width: 20%" class=filter id="develop_filter"></div>
+			<div style="float: left; width: 20%" class=filter id="dev_filter"></div>
 			<div style="float: left; width: 20%" class=button id="generate"></div>
 		</g>
 	</div>
