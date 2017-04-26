@@ -1,35 +1,32 @@
 <html>
 <head>
-  <title>Maritime Shipping and the Great Recession</title>
-  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-  <script src="https://d3js.org/d3-queue.v3.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-  <link href="styles.css" rel="stylesheet" />
-  <script src="worldgeo.js"></script>
-  <script src="ports.js"></script>
-  <script src="map.js"></script>
-  <script src="routes.js"></script>
-  <script src="BarChart.js"></script>
+	<title>Maritime Shipping and the Great Recession</title>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src="https://d3js.org/d3-queue.v3.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+	<link href="styles.css" rel="stylesheet" />
+	<script src="worldgeo.js"></script>
+	<script src="ExecuteViz.js"></script>
+	<!-- <script src="ports.js"></script> -->
+	<script src="CheckBoxFilter.js"></script>
+	<script src="map.js"></script>
+	<!-- <script src="routes.js"></script> -->
+	<script src="BarChart.js"></script>
+	<script src="LineChart.js"></script>
 </head>
-<body onload="ExecuteMap()">
-  <h1 id="title">Maritime Shipping and the Great Recession</h1>
-  <div id="mapContainer"></div>
-  <div class=filter-wrapper>
-    <div style="float: left; width: 20%" class=filter id="age_filter"></div>
-    <div style="float: left; width: 20%" class=filter id="size_filter"></div>
-    <div style="float: left; width: 20%" class=filter id="bulk_cont">
-      <input type="checkbox" name="vehicle" value="Bulk" checked="checked"><span class="checkboxtext"> Bulk</span><br>
-      <input type="checkbox" name="vehicle" value="Cont" checked="checked"><span class="checkboxtext"> Container</span>
-    </div>
-    <div style="float: left; width: 20%" class=filter id="develop">
-      <input type="checkbox" name="vehicle" value="Dev" checked="checked"><span class="checkboxtext"> Developed</span><br>
-      <input type="checkbox" name="vehicle" value="Undev" checked="checked"><span class="checkboxtext"> Undeveloped</span>
-    </div>
-    <div style="float: left; width: 20%" class="map_button"></div>
-  </div>
-  <div id="chartContainer">
-    <button onclick="setRoutes()">Generate Routes</button>
-  </div>
+<body onload="ExecuteViz()">
+	<h1 id="title">Maritime Shipping and the Great Recession</h1>
+	<div id="mapContainer"></div>
+	<div id="filterContainer">
+		<g>
+			<div style="float: left; width: 20%" class=filter id="age_filter"></div>
+			<div style="float: left; width: 20%" class=filter id="size_filter"></div>
+			<div style="float: left; width: 20%" class=filter id="type_filter"></div>
+			<div style="float: left; width: 20%" class=filter id="develop_filter"></div>
+			<div style="float: left; width: 20%" class=button id="generate"></div>
+		</g>
+	</div>
+	<div id="chartContainer"></div>
 
 </body>
 </html>
