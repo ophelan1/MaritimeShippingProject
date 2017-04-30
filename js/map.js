@@ -157,6 +157,32 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
                 linechart.data(chart_data);
             }); 
 
+        update.on("mouseover", function() {
+            d3.select(this)
+                .attr("stroke", "#FFFF00")
+                .attr("fill", "#FFFF00")
+                .attr("opacity", 1)
+                .attr("stroke-width", 6);
+
+                //Bring path to front
+                this.parentNode.appendChild(this);
+        });
+
+        update.on("mouseout", function(d, i) {
+
+            d3.select(this)
+                .attr("fill", "#000000")
+                .attr("stroke", "#000000")
+                .attr("stroke-width", 3)
+                .attr("opacity", function() {
+                    var freq = d3.select(this).data()[0].freq;
+                    if (freq === 0) return 0;
+                    return opac(d3.select(this).data()[0].freq);
+                });
+
+
+        });
+
 
         update = ports.selectAll("path")
         	.data(ports_d);
