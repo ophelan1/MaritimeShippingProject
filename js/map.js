@@ -157,6 +157,7 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
                 linechart.data(chart_data);
             }); 
 
+
         update = ports.selectAll("path")
         	.data(ports_d);
 
