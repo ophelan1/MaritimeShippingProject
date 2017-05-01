@@ -316,9 +316,6 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
         	.transition()
         	.duration(1000)
         	.attr("opacity", 1);
-
-       	// linechart.data([]);
-
     };
 
     function buildRoute(coords) {
