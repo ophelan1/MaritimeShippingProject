@@ -1,0 +1,109 @@
+.utility-page-wrap {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  max-height: 100%;
+  max-width: 100%;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.utility-page-content {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 260px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  text-align: center;
+}
+
+.utility-page-form {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: stretch;
+  -webkit-align-items: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+.title {
+  position: static;
+  font-family: Georgia, Times, 'Times New Roman', serif;
+  font-style: italic;
+  text-align: center;
+  text-decoration: underline;
+}
+
+.subtitle {
+  font-family: Georgia, Times, 'Times New Roman', serif;
+  text-align: center;
+}
+
+.body {
+  background-image: -webkit-linear-gradient(270deg, rgba(67, 80, 233, .33), rgba(67, 80, 233, .33));
+  background-image: linear-gradient(180deg, rgba(67, 80, 233, .33), rgba(67, 80, 233, .33));
+}
+
+.titleimg {
+  position: relative;
+  border: 1px solid #000;
+  text-align: left;
+}
+
+.sectiontitle {
+  text-decoration: underline;
+}
+
+.paragraph {
+  font-size: 18px;
+}
+
+.columnpic {
+  position: static;
+}
+
+.image {
+  margin-left: 25%;
+  padding-right: 0px;
+}
+
+.video {
+  width: 60%;
+  margin-left: 20%;
+}
+
+.image-2 {
+  width: 50%;
+  margin-left: 25%;
+}
+
+.image-3 {
+  width: 50%;
+  margin-left: 25%;
+}
+
+.reflectionheading {
+  font-family: 'Great Vibes', cursive;
+  text-decoration: underline;
+}
