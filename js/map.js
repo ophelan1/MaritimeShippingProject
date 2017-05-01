@@ -1,11 +1,13 @@
+//############################# GLOBAL VARIABLES #########################################
+    var width = 2150;
+    var height = 1000;
+
+//############################# FUNCTIONS #########################################
 function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
     var ports_d = ports_dt;
     var routes_d = routes_dt;
     var vessels_d = vessels_dt;
     var traversals_d = traversals_dt;
-
-    var width = 2150,
-        height = 1000;
 
     var mapSvg = d3.select("#mapContainer")
         .append("svg")
@@ -28,9 +30,13 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
         .attr("fill", "#b7b7b7")
         .attr("d", geoPath);
 
-  
-  // var slider = d3.select("#slider").call(d3.slider().axis(true).min(2006).max(2012).step(3));
+    var linechart = LineChart();
+    d3.select("#chartContainer").call(linechart);
 
+  
+    // var slider = d3.select("#slider").call(d3.slider().axis(true).min(2006).max(2012).step(3));
+
+//############################# AGE FILTER #########################################
     var age = [
         {name: "0-5", func: function(datum, checked) {
             return datum.age == "0-5" && checked == true;
@@ -58,6 +64,7 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
     var age_filter = CheckBoxFilter("age").data(age);
     d3.select("#age_filter").call(age_filter);
 
+//############################# SHIP-TYPE FILTER #########################################
     var type = [
         {name: "Bulk", func: function(datum, checked) {
             return datum.type == "Bulk" && checked == true;
@@ -66,18 +73,16 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
             return datum.type == "Container" && checked == true;
         }}
     ];
-
     var type_filter = CheckBoxFilter("type").data(type);
     d3.select("#type_filter").call(type_filter);
 
+//############################# GENERATE-MAP BUTTON #########################################
     var button = d3.select("div.button")
         .append("button")
         .attr("class","generate-button")
         .text("Generate Routes")
         .on("click", drawRoutes);
 
-    var linechart = LineChart();
-    d3.select("#chartContainer").call(linechart);
 
 	var routes = mapSvg.append("g");
     var ports = mapSvg.append("g");
@@ -133,29 +138,52 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
                 return opac(d3.select(this).data()[0].freq);
             });
 
-        update
-            .on("click", function() {
-                var route = d3.select(this);
-                var rClass = route.attr("class");
-                if (rClass.search("selected") === -1) {
-                    route.attr("class","route selected");
-                } else {
-                    route.attr("class","route");
-                }
+        update.on("click", function() {
+            var route = d3.select(this);
+            var rClass = route.attr("class");
+            if (rClass.search("selected") === -1) {
+                route.attr("class","route selected");
+            } 
+            else {
+                route.attr("class","route");
+            }
 
-                var chart_data = [];
-                var selected = d3.selectAll(".route.selected");
-                selected.each( function() {
-                    var dat = d3.select(this).data()[0];
-                    chart_data.push([
-                        { year: "2006", value: dat.freq2006 },
-                        { year: "2009", value: dat.freq2009 },
-                        { year: "2012", value: dat.freq2012 }
-                    ]);
+            var chart_data = [];
+            var selected = d3.selectAll(".route.selected");
+            selected.each( function() {
+                var dat = d3.select(this).data()[0];
+                chart_data.push([
+                    { year: "2006", value: dat.freq2006 },
+                    { year: "2009", value: dat.freq2009 },
+                    { year: "2012", value: dat.freq2012 }
+                ]);
+            });
+
+            linechart.data(chart_data);
+
+        }); 
+        update.on("mouseover", function() {
+            d3.select(this)
+                .attr("stroke", "#FFFF00")
+                .attr("fill", "#FFFF00")
+                .attr("opacity", 1)
+                .attr("stroke-width", 6);
+
+                //Bring path to front
+                this.parentNode.appendChild(this);
+        });
+        update.on("mouseout", function(d, i) {
+            d3.select(this)
+                .attr("fill", "#000000")
+                .attr("stroke", "#000000")
+                .attr("stroke-width", 3)
+                .attr("opacity", function() {
+                    var freq = d3.select(this).data()[0].freq;
+                    if (freq === 0) return 0;
+                    return opac(d3.select(this).data()[0].freq);
                 });
+        });
 
-                linechart.data(chart_data);
-            }); 
 
         update = ports.selectAll("path")
         	.data(ports_d);
@@ -197,92 +225,6 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
 
        	linechart.data([]);
 
-        // var routes = mapSvg.append("g");
-
-        // var route_data = allFilters(ports_d, routes_d, vessels_d, traversals_d);
-
-        // var opac = d3.scale.linear()
-        //     .range([0,1])
-        //     .domain([0, d3.max(route_data, function(d) { 
-        //         return d.freq;
-        //     })]);   
-
-        // routes.selectAll("path")
-        //     .data(route_data)
-        //     .enter()
-        //     .append("path")
-        //     .attr("class", "route")
-        //     .attr("id", function(d) {
-        //         return "r" + d.routeID;
-        //     })
-        //     .attr("opacity", function() {
-        //         return opac(d3.select(this).data()[0].freq);
-        //     })
-        //     .attr("d", function(d) {
-        //         var startport = ports_d.filter(function(d2){
-        //             return d2.id == d.startportID;
-        //         });
-        //         var endport = ports_d.filter(function(d2){
-        //             return d2.id == d.endportID;
-        //         });
-        //         var coords = [
-        //             [startport[0].long, startport[0].lat],
-        //             [endport[0].long, endport[0].lat]
-        //         ];
-        //         return buildRoute(coords);
-        //     })
-        //     .attr("fill", "#000000")
-        //     .attr("stroke", "#000000")
-        //     .attr("stroke-width", 3)// function(d) {
-        //     // return width_scale(d);
-        //     // })
-        //     .on("click", function() {
-        //         var route = d3.select(this);
-        //         var rClass = route.attr("class");
-        //         if (rClass.search("selected") === -1) {
-        //             route.attr("class","route selected");
-        //         } else {
-        //             route.attr("class","route");
-        //         }
-
-        //         var chart_data = [];
-        //         var selected = d3.selectAll(".route.selected");
-        //         selected.each( function() {
-        //             var dat = d3.select(this).data()[0];
-        //             chart_data.push([
-        //                 { year: "2006", value: dat.freq2006 },
-        //                 { year: "2009", value: dat.freq2009 },
-        //                 { year: "2012", value: dat.freq2012 }
-        //             ]);
-        //         });
-
-        //         linechart.data(chart_data);
-        //     }); 
-
-        // var ports = mapSvg.append("g");
-
-        // ports.selectAll("path")
-        //     .data(ports_d)
-        //     .enter()
-        //     .append("path")
-        //     .attr("class","port")
-        //     .attr("fill", "#900")
-        //     .attr("stroke", "#999")
-        //     .attr("d", function(d) {
-        //         var feature = {
-        //             "type":"Feature",
-        //             "geometry": {
-        //                 "type": "Point",
-        //                 "coordinates": [d.long, d.lat]
-        //             }
-        //         };
-        //         return geoPath(feature);
-        //     })
-        //     .on("click", function() {
-        //         d3.select(this)
-        //             .attr("fill", "#342a99")
-        //             .attr("stroke", "#342a99");
-        //     });
     };
 
     function buildRoute(coords) {
@@ -375,12 +317,5 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
 
         return route_data;
     }
-
-    // function getFrequencies(data) {
-    //   var currentCompany = current.Company;
-    //   if(!freq.hasOwnProperty(currentCompany)) freq[currentCompany] = 0;
-    //   freq[currentCompany]++;
-    //   return freq;
-    // }
 
 }
