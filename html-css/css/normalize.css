@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Sans');
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 /**
  * 1. Set default font family to sans-serif.
@@ -5,7 +6,7 @@
  *    without disabling user zoom.
  */
 html {
-  font-family: sans-serif;
+  font-family: 'PT Sans';
   /* 1 */
   -ms-text-size-adjust: 100%;
   /* 2 */

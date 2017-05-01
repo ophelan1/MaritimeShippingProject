@@ -107,7 +107,7 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
 
     var year_filter = CheckBoxFilter("year","Year").data(year);
     filters.append("div")
-    	.attr("id", "year-filter")
+    	.attr("id", "year_filter")
     	.attr("class", "filter")
     	.call(year_filter);
 
@@ -145,9 +145,10 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
 
         var opac = d3.scale.linear()
             .range([0.1,1])
-            .domain([0, d3.max(route_data, function(d) { 
-                return d.freq;
-            })]);   
+            .domain([0,2270]);
+            // .domain([0, d3.max(route_data, function(d) { 
+            //     return d.freq;
+            // })]);   
 
         var update = routes.selectAll("path")
             .data(route_data);
@@ -186,7 +187,7 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
             .duration(1000)
             .attr("opacity", function() {
             	var freq = d3.select(this).data()[0].freq;
-            	if (freq === 0) return 0;
+            	if (freq === 0) d3.select(this).remove();
                 return opac(d3.select(this).data()[0].freq);
             });
 
@@ -202,6 +203,7 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
 
             var chart_data = [], label_data = [];
             var selected = d3.selectAll(".route.selected");
+            console.log(selected);
             selected.each( function() {
                 var dat = d3.select(this).data()[0];
                 chart_data.push([
@@ -335,7 +337,7 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
             path+= "M" + xm180 + ","; path+= (proj(coords[0])[1] + slope * horz1);
         } 
 
-        else if (coords[0][0] < -70 & coords[1][0]>105) {
+        else if (coords[0][0] < -70 & coords[1][0]>100) {
             horz1 = proj(coords[0])[0] - xm180;
             horz2 = x180 - proj(coords[1])[0];
             slope = vert/(horz1 + horz2);
@@ -350,7 +352,8 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
         // filter all this data
         // produce array of route ids, port ids and frequencies
         
-        var vessels = age_filter.filter(vessels_d, d3.select("#type_filter"));
+        var vessels = age_filter.filter(vessels_d, d3.select("#age_filter"));
+        vessels = type_filter.filter(vessels, d3.select("#type_filter"));
         var vesselIDs = vessels_d.map(function(d) { return d.id; });
 
         var routeIDs = routes_d.map(function(d) { return d.routeID; });
@@ -375,6 +378,7 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
         var routeIDs = []; 
         var route_data = [];
 
+        // calculate for all years
         var len = traversals_d.length;
         for (var i=0; i<len; i++) {
             var ti = traversals_d[i];
@@ -405,11 +409,41 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
                     route_data[index].freq2012++;
                     break;
             }
-            route_data[index].freq++; // if filtered first by year, line chart will not work
-        							// if not, freq will be wrong
-
-        	// fix route_data[index].freq by summing appropriate years
+            route_data[index].freq++; 
         }
+
+  		// filter by year
+  		var traversals = year_filter.filter(traversals_d, d3.select("#year_filter"));
+  		if (traversals.length == traversals_d.length) {
+  			return route_data;
+  		}
+
+  		len = route_data.length;
+  		for (var i=0; i<len; i++) {
+  			route_data[i].freq = 0;
+  		}
+
+		if (d3.select("#year_filter").select("#f0").property("checked")) {
+			for (var j=0; j<len; j++) {
+				route_data[j].freq+=route_data[j].freq2006;
+			}  				
+		}
+		if (d3.select("#year_filter").select("#f1").property("checked")) {
+			for (var j=0; j<len; j++) {
+				route_data[j].freq+=route_data[j].freq2009;
+			}  				
+		}
+		if (d3.select("#year_filter").select("#f2").property("checked")) {
+			for (var j=0; j<len; j++) {
+				route_data[j].freq+=route_data[j].freq2012;
+			}  				
+		}
+
+        // len = traversals.length;
+        // for (var i=0; i<len; i++) {
+        //     index = routeIDs.indexOf(traversals[i].routeID);
+        //     route_data[index].freq++;
+        // }
 
         return route_data;
     }

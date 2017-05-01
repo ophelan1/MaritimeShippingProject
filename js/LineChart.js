@@ -44,7 +44,7 @@ function LineChart() { // change to show axes even if there is no data
 				.orient("left");
 
 			var line = d3.svg.line()
-				.x(function(d) { console.log(d.year); console.log(x(d.year)); return x(d.year); })
+				.x(function(d) { return x(d.year); })
 				.y(function(d) { return y(d.value); });
 
 			var svg = d3.select(this)

@@ -21,6 +21,9 @@ function CheckBoxFilter(fClass, title) {
 					.append("input")
 					.attr("class", "checkbox " + filterClass)
 					.attr("type", "checkbox")
+					.attr("id", function(d,i) {
+						return "f" + ii;
+					})
 					.attr("d", function(d) {
 						return functions[ii]; 
 					})
@@ -56,10 +59,7 @@ function CheckBoxFilter(fClass, title) {
 			};
 		
 			filterData = function(newData, selection) {
-
-				// console.log(selection);
 				var filters = selection.selectAll("input.checkbox:checked");
-				// console.log(filters);
 				var returnData = [];
 
 				// get data that should be included and concat to previous data

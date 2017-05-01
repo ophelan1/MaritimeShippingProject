@@ -74,7 +74,7 @@ input[type=checkbox] {
 
 .chart-title {
 	font: 26px sans-serif;
-    font-family: 'PT Sans'; 
+  font-family: 'PT Sans'; 
 	text-align: center;
 }
 
@@ -161,4 +161,13 @@ path.line {
     fill: none;
     stroke: black;
     stroke-width: 4px;
+}
+
+.port {
+    fill: #900;
+    stroke: #999;
+}
+
+.port.selected {
+  fill: #342a99;
 }
