@@ -57,10 +57,12 @@ function CheckBoxFilter(fClass, title) {
 		
 			filterData = function(newData, selection) {
 
-				var filters = selection.selectAll("input:checkbox:checked")[0];
+				// console.log(selection);
+				var filters = selection.selectAll("input.checkbox:checked");
+				// console.log(filters);
 				var returnData = [];
 
-				// get dad that should be included and concat to previous data
+				// get data that should be included and concat to previous data
 				var len = filters.length;
 				for (var ii=0; ii<len; ii++) {
 					returnData = returnData.concat(newData.filter( function(d) {
