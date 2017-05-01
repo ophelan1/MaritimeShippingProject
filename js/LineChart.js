@@ -1,7 +1,7 @@
 function LineChart() { // change to show axes even if there is no data
 					// if no data, use dummy values for axes
 	var margin = {top: 30, right: 20, bottom: 40, left: 80};
-	var width = 1900, height = 1000;
+	var width = 2150, height = 1000;
 	var chartClass = "linechart";
 	var data = [];
 
@@ -80,6 +80,9 @@ function LineChart() { // change to show axes even if there is no data
 				.style("stroke","black")
 				.style("stroke-width", "4px")
 				.attr("transform", "translate(" + x.rangeBand()/2 + ",0)");
+				
+
+
 
 			updateData = function() {
 				if (typeof data !== 'undefined' && data.length > 0) {
