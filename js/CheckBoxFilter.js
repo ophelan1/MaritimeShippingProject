@@ -1,4 +1,4 @@
-function CheckBoxFilter(fClass) {
+function CheckBoxFilter(fClass, title) {
 	var labels = [];
 	var functions = [];
 	var filterClass = fClass;
@@ -8,6 +8,12 @@ function CheckBoxFilter(fClass) {
 	function chart(selection) {
 		selection.each( function() {
 			var g = d3.select(this).append("g");
+
+			g.append("text")
+				.text(title)
+				.attr("class", "filter-title")
+
+			g.append("br");
 
 			var len = labels.length;
 			for(var ii=0; ii<len; ii++) {

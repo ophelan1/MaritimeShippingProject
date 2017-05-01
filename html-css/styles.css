@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Sans');
 @CHARSET "ISO-8859-1";
 
 .clearfix:after { 
@@ -54,6 +55,7 @@ button {
     clear: both;
     height: 60px;
     font: 50px sans-serif;
+    font-family: 'PT Sans';
     font-style: italic;
     text-decoration: underline;
     text-align: center;
@@ -67,16 +69,24 @@ input[type=checkbox] {
 
 .checkboxtext {
   font: 40px sans-serif;
+  font-family: 'PT Sans';  
 }
 
 .chart-title {
 	font: 26px sans-serif;
+    font-family: 'PT Sans'; 
 	text-align: center;
+}
+
+text.filter-title {
+    font-family: 'PT Sans'; 
+    font-size: 45px;
 }
 
 text.highlight-label {
     transform: translate(50,0);
     font-size: 30px;
+    font-family: 'PT Sans'; 
     opacity: 0;
 }
 
@@ -123,6 +133,7 @@ div.chart {
 
 .axis text {
   	font:20px sans-serif;
+    font-family: 'PT Sans'; 
   	width: 50px;
 }
 
