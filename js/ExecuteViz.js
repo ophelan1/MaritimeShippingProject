@@ -22,6 +22,7 @@ function ExecuteViz() {
                 flag: d.flag,
                 type: d.type,
                 size: d.size,
+                // age: d.age,
                 owner: d.owner,
                 operator: d.operator
             };
@@ -42,6 +43,12 @@ function ExecuteViz() {
     function ready(error, ports_d, routes_d, vessels_d, traversals_d) {
         if (error) throw error;
 
-        ExecuteMap(ports_d, routes_d, vessels_d, traversals_d);
+        console.log(ports_d);
+        console.log(routes_d);
+        console.log(vessels_d);
+        console.log(traversals_d);
+        // ExecuteMap(ports_d, routes_d, vessels_d, traversals_d);
+        ExecuteMap(routes_d, routes_d, routes_d, routes_d);
+
     }
 }

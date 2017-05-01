@@ -50,28 +50,17 @@ function CheckBoxFilter(fClass) {
 			};
 		
 			filterData = function(newData, selection) {
-				var filters = selection.selectAll("input.checkbox:checked")[0];
+
+				var filters = selection.selectAll("input:checkbox:checked")[0];
 				var returnData = [];
 
-				// console.log(filters);
-				// console.log(filters[0]);
-
+				// get dad that should be included and concat to previous data
 				var len = filters.length;
 				for (var ii=0; ii<len; ii++) {
 					returnData = returnData.concat(newData.filter( function(d) {
-						return functions[ii](d, true);
+						return functions[ii](d);
 					}));
 				}
-				// filters.each( function() {
-				// 	thisFilter = this;
-				// 	returnData = returnData.concat(newData.filter( function(d,i) {
-				// 		console.log("thisFilter");
-				// 		console.log(thisFilter);
-				// 		return true;
-				// 		// console.log(functions[i](d, thisFilter.property("checked")));
-				// 		// return functions[i](d, thisFilter.property("checked"));
-				// 	}));
-				// });
 
 				return returnData;
 			};

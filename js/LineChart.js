@@ -1,9 +1,10 @@
 function LineChart() { // change to show axes even if there is no data
 					// if no data, use dummy values for axes
 	var margin = {top: 30, right: 20, bottom: 40, left: 80};
-	var width = 2150, height = 1000;
+	var width = 2000, height = 1000;
 	var chartClass = "linechart";
 	var data = [];
+	var label_data = [];
 
 	var updateData;
 	var updateHeight;
@@ -13,7 +14,7 @@ function LineChart() { // change to show axes even if there is no data
 		selection.each( function () {
 			// set scale ranges
 			var x = d3.scale.ordinal() // x-scale
-			  	.rangeRoundBands([0, width], .1);
+			  	.rangeRoundBands([0, width*.95], .1);
 
 			var y = d3.scale.linear() // y-scale
 				.range([height, 0]);
@@ -68,22 +69,8 @@ function LineChart() { // change to show axes even if there is no data
 				.call(yAxis);
 
 			// draw lines
-			var linesg = g.append("g")
-				.attr("class", "lines");
-
-			var lines = linesg.selectAll("path")
-				.data(data)
-				.enter()
-				.append("path")
-				.attr("d", line)
-				.attr("fill","none")
-				.style("stroke","black")
-				.style("stroke-width", "4px")
-				.attr("transform", "translate(" + x.rangeBand()/2 + ",0)");
+			var linesg = g.append("g");
 				
-
-
-
 			updateData = function() {
 				if (typeof data !== 'undefined' && data.length > 0) {
 					x.domain(data[0].map(function(d) { return d.year; }));
@@ -116,7 +103,7 @@ function LineChart() { // change to show axes even if there is no data
 
 				update.exit()
 					.transition()
-                	.duration(1000)
+                	.duration(700)
 					.style("opacity", 0)
 					.remove();
 
@@ -126,11 +113,41 @@ function LineChart() { // change to show axes even if there is no data
 				update
 					.attr("transform", "translate(" + x.rangeBand()/2 + ",0)")
 					.transition()
-                	.duration(1000)
+                	.duration(700)
 					.attr("d", line)
-					.attr("fill","none")
-					.style("stroke","black")
+					.attr("class", "line")
+					.style("stroke", function(d,i) {
+						return cScale(i);
+					})
 					.style("stroke-width","4px");
+
+				update = linesg.selectAll(".line-label")
+					.data(label_data);
+
+				update.exit()
+					.transition()
+                	.duration(700)
+					.style("opacity", 0)
+					.remove();
+
+				update.enter()
+					.append("text")
+					.attr("class","line-label");
+
+				update
+					.text(function(d) {
+						return d.startport + " to " + d.endport;
+					})
+					.transition()
+                	.duration(700)
+                	.attr("x", function(d) {
+                		return x(2012) + x.rangeBand()/2 + 40;
+                	})
+                	.attr("y", function(d, i) {
+                		return y(data[i][2].value);
+                	})
+                	.attr("font-size","24");
+
 			};
 
 			updateHeight = function() {
@@ -196,9 +213,10 @@ function LineChart() { // change to show axes even if there is no data
 		});
 	};
 
-    chart.data = function(value) {
+    chart.data = function(value, value2) {
         if (!arguments.length) return data;
         data = value;
+        label_data = value2;
         if (typeof updateData == "function") updateData();
         return chart;
     };

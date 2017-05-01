@@ -30,59 +30,128 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
         .attr("fill", "#b7b7b7")
         .attr("d", geoPath);
 
+    d3.select("#mapContainer").append("br");
+
+    var highlight_label = d3.select("#mapContainer")
+    	.append("text")
+    	.attr("class","highlight-label")
+    	.text("filler");
+
     var linechart = LineChart();
     d3.select("#chartContainer").call(linechart);
 
-  
-    // var slider = d3.select("#slider").call(d3.slider().axis(true).min(2006).max(2012).step(3));
+    var filters = d3.select("#filterContainer")
+    	.selectAll("g");
 
 //############################# AGE FILTER #########################################
+
     var age = [
-        {name: "0-5", func: function(datum, checked) {
-            return datum.age == "0-5" && checked == true;
+        {name: "0-5", func: function(datum) {
+            return datum.age == "0-5";
         }},
-        {name: "6-10", func: function(datum, checked) {
-            return datum.age == "6-10" && checked == true;
+        {name: "6-10", func: function(datum) {
+            return datum.age == "6-10";
         }},
-        {name: "11-15", func: function(datum, checked) {
-            return datum.age == "11-15" && checked == true;
+        {name: "11-15", func: function(datum) {
+            return datum.age == "11-15";
         }},
-        {name: "16-20", func: function(datum, checked) {
-            return datum.age == "16-20" && checked == true;
+        {name: "16-20", func: function(datum) {
+            return datum.age == "16-20";
         }},
-        {name: "21-25", func: function(datum, checked) {
-            return datum.age == "21-25" && checked == true;
+        {name: "21-25", func: function(datum) {
+            return datum.age == "21-25";
         }},
-        {name: "26-30", func: function(datum, checked) {
-            return datum.age == "26-30" && checked == true;
+        {name: "26-30", func: function(datum) {
+            return datum.age == "26-30";
         }},
-        {name: "30+", func: function(datum, checked) {
-            return datum.age == "31+" && checked == true;
+        {name: "30+", func: function(datum) {
+            return datum.age == "31+";
         }},
     ];
 
     var age_filter = CheckBoxFilter("age").data(age);
-    d3.select("#age_filter").call(age_filter);
+    filters.append("div")
+    	.attr("id", "age-filter")
+    	.attr("class", "filter")
+    	.call(year_filter);
+
+//############################# SHIP-SIZE FILTER #########################################
+    // var size = [
+    //     {name: "Bulk", func: function(datum, checked) {
+    //         return datum.type == "Bulk" && checked == true;
+    //     }},
+    //     {name: "Container", func: function(datum, checked) {
+    //         return datum.type == "Container" && checked == true;
+    //     }}
+    // ];
+
+    // var type_filter = CheckBoxFilter("type").data(type);
+    // filters.append("div")
+    // 	.attr("id", "type-filter")
+    // 	.call(type_filter);
+
+//############################# YEAR FILTER #########################################
+
+    var year = [
+        {name: "2006", func: function(datum) {
+            return datum.year == "2006";
+        }},
+        {name: "2009", func: function(datum) {
+            return datum.year == "2009";
+        }},
+        {name: "2012", func: function(datum) {
+    		return datum.year == "2012";
+        }}
+
+    ];
+
+    var year_filter = CheckBoxFilter("year").data(year);
+    filters.append("div")
+    	.attr("id", "year-filter")
+    	.attr("class", "filter")
+    	.call(year_filter);
+
 
 //############################# SHIP-TYPE FILTER #########################################
     var type = [
-        {name: "Bulk", func: function(datum, checked) {
-            return datum.type == "Bulk" && checked == true;
+        {name: "Bulk", func: function(datum) {
+            return datum.type == "Bulk";
         }},
-        {name: "Container", func: function(datum, checked) {
-            return datum.type == "Container" && checked == true;
+        {name: "Container", func: function(datum) {
+            return datum.type == "Container";
         }}
     ];
+
     var type_filter = CheckBoxFilter("type").data(type);
-    d3.select("#type_filter").call(type_filter);
+    filters.append("div")
+    	.attr("id", "type-filter")
+    	.attr("class", "filter")
+    	.call(type_filter);
 
 //############################# GENERATE-MAP BUTTON #########################################
-    var button = d3.select("div.button")
+    var gen_button = filters
+    	.append("div")
+    	.attr("class","button-cont")
         .append("button")
         .attr("class","generate-button")
         .text("Generate Routes")
         .on("click", drawRoutes);
 
+    d3.select("div.button-cont").append("br");
+
+    var clear_selection_button = d3.select("div.button-cont")
+		.append("button")
+        .attr("class","clear-button")
+        .text("Clear Selection")
+        .on("click", resetSelection);
+
+    d3.select("div.button-cont").append("br");
+
+    var clear_filters_button = d3.select("div.button-cont")
+		.append("button")
+        .attr("class","clear-button")
+        .text("Reset Filters")
+        .on("click", resetFilters);
 
 	var routes = mapSvg.append("g");
     var ports = mapSvg.append("g");
@@ -148,7 +217,7 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
                 route.attr("class","route");
             }
 
-            var chart_data = [];
+            var chart_data = [], label_data = [];
             var selected = d3.selectAll(".route.selected");
             selected.each( function() {
                 var dat = d3.select(this).data()[0];
@@ -157,11 +226,27 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
                     { year: "2009", value: dat.freq2009 },
                     { year: "2012", value: dat.freq2012 }
                 ]);
+
+                var startport = ports_d.filter(function(d2){
+                    return d2.id == dat.startportID;
+                });
+
+                var endport = ports_d.filter(function(d2){
+                    return d2.id == dat.endportID;
+                });
+
+                label_data.push(
+                   	{ 
+                   		startport: startport[0].name + ", " + startport[0].country, 
+                   	  	endport: endport[0].name + ", " + endport[0].country
+                   	}
+                );
             });
 
-            linechart.data(chart_data);
+            linechart.data(chart_data, label_data);
 
         }); 
+
         update.on("mouseover", function() {
             d3.select(this)
                 .attr("stroke", "#FFFF00")
@@ -169,9 +254,30 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
                 .attr("opacity", 1)
                 .attr("stroke-width", 6);
 
+                var dat = d3.select(this).data()[0];
+
+                var startport = ports_d.filter(function(d2){
+                    return d2.id == dat.startportID;
+                });
+
+                var endport = ports_d.filter(function(d2){
+                    return d2.id == dat.endportID;
+                });
+
+                highlight_label
+	                .text(
+	                	"            " +
+	                	startport[0].name + ", " + startport[0].country + 
+	                	" to " + 
+	                	endport[0].name + ", " + endport[0].country
+	                )
+	                .attr("class","highlight-label visible");
+	                // .attr("opacity",1);
+
                 //Bring path to front
                 this.parentNode.appendChild(this);
         });
+
         update.on("mouseout", function(d, i) {
             d3.select(this)
                 .attr("fill", "#000000")
@@ -182,6 +288,11 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
                     if (freq === 0) return 0;
                     return opac(d3.select(this).data()[0].freq);
                 });
+
+            highlight_label
+            	// .attr("opacity",0)
+            	.attr("class","highlight-label")
+            	.text("filler");
         });
 
 
@@ -223,17 +334,11 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
         	.duration(1000)
         	.attr("opacity", 1);
 
-       	linechart.data([]);
+       	// linechart.data([]);
 
     };
 
     function buildRoute(coords) {
-        // var west = false;
-        // if ()
-
-        // calculate east to west if start >105 and ends up on the west coast 
-        // how to define west coast of americas?(<70 if south america or <)
-
         var x180 = proj([180,coords[0][1]])[0];
         var xm180 = proj([-179.999,coords[0][1]])[0];
         var vert = proj(coords[1])[1] - proj(coords[0])[1]; // y of start minus y of end
@@ -277,6 +382,15 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
         return getFrequencies(traversals);
     }
 
+    function resetFilters() {
+    	d3.selectAll(".checkbox").property("checked",true);
+    }
+
+    function resetSelection() {
+    	d3.selectAll(".route.selected").attr("class","route");
+    	linechart.data([],[]);
+    }
+
     function getFrequencies(traversals_d) {
         var routeIDs = []; 
         var route_data = [];
@@ -313,6 +427,8 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
             }
             route_data[index].freq++; // if filtered first by year, line chart will not work
         							// if not, freq will be wrong
+
+        	// fix route_data[index].freq by summing appropriate years
         }
 
         return route_data;
