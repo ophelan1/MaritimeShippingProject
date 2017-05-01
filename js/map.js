@@ -40,55 +40,55 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
     var linechart = LineChart();
     d3.select("#chartContainer").call(linechart);
 
-    var filters = d3.select("#filterContainer")
-    	.selectAll("g");
+    var filters = d3.select("#filterContainer");
 
 //############################# AGE FILTER #########################################
-
     var age = [
         {name: "0-5", func: function(datum) {
             return datum.age == "0-5";
         }},
-        {name: "6-10", func: function(datum) {
-            return datum.age == "6-10";
+        {name: "5-10", func: function(datum) {
+            return datum.age == "5-10";
         }},
-        {name: "11-15", func: function(datum) {
-            return datum.age == "11-15";
+        {name: "10-15", func: function(datum) {
+            return datum.age == "10-15";
         }},
-        {name: "16-20", func: function(datum) {
-            return datum.age == "16-20";
+        {name: "15-20", func: function(datum) {
+            return datum.age == "15-20";
         }},
-        {name: "21-25", func: function(datum) {
-            return datum.age == "21-25";
+        {name: "20-25", func: function(datum) {
+            return datum.age == "20-25";
         }},
-        {name: "26-30", func: function(datum) {
-            return datum.age == "26-30";
+        {name: "25-30", func: function(datum) {
+            return datum.age == "25-30";
         }},
-        {name: "30+", func: function(datum) {
-            return datum.age == "31+";
+        {name: ">30", func: function(datum) {
+            return datum.age == ">30";
         }},
     ];
 
-    var age_filter = CheckBoxFilter("age").data(age);
+    var age_filter = CheckBoxFilter("age","Ship Age").data(age);
     filters.append("div")
     	.attr("id", "age-filter")
     	.attr("class", "filter")
-    	.call(year_filter);
+    	.call(age_filter);
 
-//############################# SHIP-SIZE FILTER #########################################
-    // var size = [
-    //     {name: "Bulk", func: function(datum, checked) {
-    //         return datum.type == "Bulk" && checked == true;
-    //     }},
-    //     {name: "Container", func: function(datum, checked) {
-    //         return datum.type == "Container" && checked == true;
-    //     }}
-    // ];
 
-    // var type_filter = CheckBoxFilter("type").data(type);
-    // filters.append("div")
-    // 	.attr("id", "type-filter")
-    // 	.call(type_filter);
+//############################# SHIP-TYPE FILTER #########################################
+    var type = [
+        {name: "Bulk", func: function(datum) {
+            return datum.type == "Bulk";
+        }},
+        {name: "Container", func: function(datum) {
+            return datum.type == "Container";
+        }}
+    ];
+
+    var type_filter = CheckBoxFilter("type","Ship Type").data(type);
+    filters.append("div")
+    	.attr("id", "type-filter")
+    	.attr("class", "filter")
+    	.call(type_filter);
 
 //############################# YEAR FILTER #########################################
 
@@ -105,28 +105,11 @@ function ExecuteMap(ports_dt, routes_dt, vessels_dt, traversals_dt) {
 
     ];
 
-    var year_filter = CheckBoxFilter("year").data(year);
+    var year_filter = CheckBoxFilter("year","Year").data(year);
     filters.append("div")
     	.attr("id", "year-filter")
     	.attr("class", "filter")
     	.call(year_filter);
-
-
-//############################# SHIP-TYPE FILTER #########################################
-    var type = [
-        {name: "Bulk", func: function(datum) {
-            return datum.type == "Bulk";
-        }},
-        {name: "Container", func: function(datum) {
-            return datum.type == "Container";
-        }}
-    ];
-
-    var type_filter = CheckBoxFilter("type").data(type);
-    filters.append("div")
-    	.attr("id", "type-filter")
-    	.attr("class", "filter")
-    	.call(type_filter);
 
 //############################# GENERATE-MAP BUTTON #########################################
     var gen_button = filters
